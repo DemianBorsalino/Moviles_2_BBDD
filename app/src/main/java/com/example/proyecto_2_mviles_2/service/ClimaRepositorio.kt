@@ -17,13 +17,13 @@ class ClimaRepositorio private constructor(private val context: Context) {
             }
     }
 
-    suspend fun fetchClimaFromApi(city: String, apiKey: String): Result<Clima> {
+    suspend fun fetchClimaFromApi(city: String, apiKey: String,  units: String): Result<Clima> {
         return try {
-            val resp = RetrofitClient.apiClient.getCurrentByCity(city, apiKey)
+            val resp = RetrofitClient.apiClient.getCurrentByCity(city, apiKey, units)
             val item = resp.data.firstOrNull()
-            if (item != null && item.city_name != null && item.temp != null) {
+            if (item != null && item.cityName != null && item.temp != null) {
                 val clima = Clima(
-                    cityName = item.city_name,
+                    cityName = item.cityName,
                     description = item.weather?.description ?: "N/A",
                     temperature = item.temp
                 )

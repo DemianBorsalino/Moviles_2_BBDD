@@ -47,6 +47,7 @@ class ClimaDbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null,
             put(COL_TS, clima.timestamp)
         }
         db.insert(TABLE_NAME, null, cv)
+        db.close()
     }
 
     fun getAll(): List<Clima> {
@@ -62,6 +63,7 @@ class ClimaDbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null,
                 list.add(Clima(city, desc, temp, ts))
             }
         }
+        db.close()
         return list
     }
 }

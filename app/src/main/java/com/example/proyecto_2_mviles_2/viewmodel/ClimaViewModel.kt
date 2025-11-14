@@ -28,12 +28,12 @@ class ClimaViewModel(application: Application) : AndroidViewModel(application) {
         _climas.value = repo.getSavedClimas()
     }
 
-    fun buscarClima(city: String, apiKey: String) {
+    fun buscarClima(city: String, apiKey: String, units: String) {
         _loading.value = true
         _error.value = null
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
-                repo.fetchClimaFromApi(city, apiKey)
+                repo.fetchClimaFromApi(city, apiKey, units)
             }
             _loading.value = false
             if (result.isSuccess) {

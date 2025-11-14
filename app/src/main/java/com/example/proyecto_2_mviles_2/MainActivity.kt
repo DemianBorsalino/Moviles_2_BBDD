@@ -43,18 +43,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnBuscar.setOnClickListener {
-            val city = binding.etCity.text.toString().trim()
-            val key = prefs.getString("API_KEY", null)
+            var city = binding.etCity.text.toString().trim()
+
             if (city.isBlank()) {
+                city = prefs.getString("pref_default_city", "Buenos Aires") ?: "Buenos Aires"
+                Toast.makeText(this, "Usando ciudad por defecto: $city", Toast.LENGTH_SHORT).show()
+            }
+
+            val key = prefs.getString("API_KEY", null)
+            val units = prefs.getString("pref_units", "metric") ?: "metric"
+            /*if (city.isBlank()) {
                 Toast.makeText(this, "Ingresa ciudad", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            }
+            }*/
             if (key.isNullOrBlank()) {
                 Toast.makeText(this, "Configura API Key en Ajustes", Toast.LENGTH_LONG).show()
                 startActivity(Intent(this, SettingsActivity::class.java))
                 return@setOnClickListener
             }
-            vm.buscarClima(city, key)
+
+            vm.buscarClima(city, key, units)
         }
 
         binding.fabRefresh.setOnClickListener { vm.loadSavedClimas() }
