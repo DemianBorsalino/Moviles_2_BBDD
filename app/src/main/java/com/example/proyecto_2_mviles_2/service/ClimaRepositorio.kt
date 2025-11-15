@@ -17,22 +17,27 @@ class ClimaRepositorio private constructor(private val context: Context) {
             }
     }
 
-    suspend fun fetchClimaFromApi(city: String, apiKey: String,  units: String): Result<Clima> {
+    suspend fun fetchClimaFromApi(city: String, apiKey: String, units: String): Result<Clima> {
         return try {
             val resp = RetrofitClient.apiClient.getCurrentByCity(city, apiKey, units)
+
             val item = resp.data.firstOrNull()
-            if (item != null && item.cityName != null && item.temp != null) {
-                val clima = Clima(
-                    cityName = item.cityName,
-                    description = item.weather?.description ?: "N/A",
-                    temperature = item.temp
-                )
-                // Guardar en SQLite
-                dbHelper.insert(clima)
-                Result.success(clima)
-            } else {
-                Result.failure(Exception("No data from API"))
+                ?: return Result.failure(Exception("API returned empty data"))
+
+            if (item.cityName == null || item.temp == null) {
+                return Result.failure(Exception("Incomplete data from API"))
             }
+
+            val clima = Clima(
+                cityName = item.cityName,
+                description = item.weather?.description ?: "N/A",
+                temperature = item.temp
+            )
+
+            dbHelper.insert(clima)
+
+            Result.success(clima)
+
         } catch (e: Exception) {
             Result.failure(e)
         }

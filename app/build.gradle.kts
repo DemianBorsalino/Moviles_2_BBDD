@@ -5,20 +5,27 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
 }
 
+val weatherbitApiKey: String = project.findProperty("WEATHERBIT_API_KEY") as String? ?: ""
+
 android {
     namespace = "com.example.proyecto_2_mviles_2"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.proyecto_2_mviles_2"
         minSdk = 24
-        compileSdk = 36
+        //compileSdk = 36
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue("string", "WEATHERBIT_API_KEY", "\"$weatherbitApiKey\"") //Obtengo error porque el val está afuera
+
     }
+
+
 
     buildTypes {
         release {
@@ -27,6 +34,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            //buildConfigField("String", "WEATHERBIT_API_KEY", "\"$weatherbitApiKey\"")
+        }
+        debug {
+            //buildConfigField("String", "WEATHERBIT_API_KEY", "\"${weatherbitApiKey}\"")
         }
     }
     compileOptions {
@@ -39,6 +50,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+
     }
 }
 
@@ -82,6 +94,9 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    //Preferences
+    implementation ("androidx.preference:preference-ktx:1.2.1")
 
 }
 

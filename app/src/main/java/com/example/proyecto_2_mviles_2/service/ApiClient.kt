@@ -20,6 +20,6 @@ interface ApiClient {
     suspend fun getCurrentByCity(
         @Query("city") city: String,
         @Query("key") apiKey: String,
-        @Query("units") units: String
+        @Query("units") units: String = "M"
     ): WeatherbitResponse
 }

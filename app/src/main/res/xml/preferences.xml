@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Ciudad por defecto -->
+    <EditTextPreference
+        android:key="pref_default_city"
+        android:title="Ciudad por defecto"
+        android:summary="Ciudad usada cuando no ingresás ninguna"
+        android:dialogTitle="Ingresar ciudad"
+        android:defaultValue="Buenos Aires" />
+
+    <!-- Unidades de temperatura -->
+    <ListPreference
+        android:key="pref_units"
+        android:title="Unidades"
+        android:summary="Elegí unidad de temperatura"
+        android:entries="@array/units_entries"
+        android:entryValues="@array/units_values"
+        android:defaultValue="metric" />
+
 </androidx.preference.PreferenceScreen>
