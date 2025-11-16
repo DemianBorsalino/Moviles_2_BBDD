@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Ciudad por defecto -->
     <EditTextPreference
         android:key="pref_default_city"
         android:title="Ciudad por defecto"
@@ -9,7 +8,6 @@
         android:dialogTitle="Ingresar ciudad"
         android:defaultValue="Buenos Aires" />
 
-    <!-- Unidades de temperatura -->
     <ListPreference
         android:key="pref_units"
         android:title="Unidades"
@@ -17,5 +15,14 @@
         android:entries="@array/units_entries"
         android:entryValues="@array/units_values"
         android:defaultValue="metric" />
+
+    <!-- ESTA ERA LA QUE FALTABA -->
+    <EditTextPreference
+        android:key="API_KEY"
+        android:title="API Key"
+        android:summary="Ingresá tu API Key de Weatherbit"
+        android:dialogTitle="API Key"
+        android:inputType="text"
+        android:defaultValue="" />
 
 </androidx.preference.PreferenceScreen>
