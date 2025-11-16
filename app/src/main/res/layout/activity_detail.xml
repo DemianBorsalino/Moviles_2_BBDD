@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <!-- Ciudad -->
+    <TextView
+        android:id="@+id/tvCityDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ciudad"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Temperatura -->
+    <TextView
+        android:id="@+id/tvTempDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20°C"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvCityDetail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Descripción -->
+    <TextView
+        android:id="@+id/tvDescDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Descripción del clima"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTempDetail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Timestamp (opcional) -->
+    <TextView
+        android:id="@+id/tvTsDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha"
+        android:textSize="14sp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvDescDetail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
