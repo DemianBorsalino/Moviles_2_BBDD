@@ -30,11 +30,11 @@ class ClimaAdapter(
             binding.checkSelect.visibility =
                 if (isSelectionMode) View.VISIBLE else View.GONE
 
-            binding.checkSelect.isChecked = selectedItems.contains(item)
+            binding.checkSelect.isChecked = selectedItems.any { it.id == item.id }//selectedItems.contains(item)
 
             binding.checkSelect.setOnCheckedChangeListener { _, checked ->
                 if (checked) selectedItems.add(item)
-                else selectedItems.remove(item)
+                else selectedItems.removeIf { it.id == item.id }
             }
 
             binding.root.setOnClickListener {

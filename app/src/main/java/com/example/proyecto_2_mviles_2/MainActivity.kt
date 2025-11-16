@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         adapter = ClimaAdapter(listOf()) { clima -> openDetail(clima) }
@@ -43,9 +46,9 @@ class MainActivity : AppCompatActivity() {
             err?.let { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
         }
 
-        binding.btnSettings.setOnClickListener {
+        /*binding.btnSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
-        }
+        }*/
 
         binding.btnClear.setOnClickListener {
             vm.clearAll()

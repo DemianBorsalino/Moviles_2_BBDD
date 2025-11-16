@@ -56,17 +56,37 @@ class ClimaDbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null,
         val list = mutableListOf<Clima>()
         cursor.use {
             while (it.moveToNext()) {
+                val id = it.getInt(it.getColumnIndexOrThrow(COL_ID))
                 val city = it.getString(it.getColumnIndexOrThrow(COL_CITY))
                 val desc = it.getString(it.getColumnIndexOrThrow(COL_DESC))
                 val temp = it.getDouble(it.getColumnIndexOrThrow(COL_TEMP))
                 val ts = it.getLong(it.getColumnIndexOrThrow(COL_TS))
-                list.add(Clima(city, desc, temp, ts))
+                list.add(Clima(id,city, desc, temp, ts))
             }
         }
         db.close()
         return list
     }
 
+    fun deleteById(id: Int) {
+        val db = writableDatabase
+        db.delete(TABLE_NAME, "$COL_ID = ?", arrayOf(id.toString()))
+        db.close()
+    }
+
+    fun deleteMultipleById(ids: List<Int>) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            for (id in ids) {
+                db.delete(TABLE_NAME, "$COL_ID = ?", arrayOf(id.toString()))
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+        db.close()
+    }
     fun clearAll() {
         val db = writableDatabase
         db.delete(TABLE_NAME, null, null) // tu tabla debe llamarse "clima"

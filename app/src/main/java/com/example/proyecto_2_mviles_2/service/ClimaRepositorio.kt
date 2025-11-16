@@ -50,11 +50,8 @@ class ClimaRepositorio private constructor(private val context: Context) {
     }
 
     fun deleteMultiple(list: List<Clima>) {
-        val db = ClimaDbHelper(context).writableDatabase
-        for (c in list) {
-            db.delete("climas", "city = ?", arrayOf(c.cityName))
-        }
-        db.close()
+        val ids = list.map { it.id }
+        dbHelper.deleteMultipleById(ids)
     }
 
 
