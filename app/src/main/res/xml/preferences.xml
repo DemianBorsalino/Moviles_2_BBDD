@@ -16,7 +16,6 @@
         android:entryValues="@array/units_values"
         android:defaultValue="metric" />
 
-    <!-- ESTA ERA LA QUE FALTABA -->
     <EditTextPreference
         android:key="API_KEY"
         android:title="API Key"

@@ -14,6 +14,7 @@ import com.example.proyecto_2_mviles_2.adapter.ClimaAdapter
 import com.example.proyecto_2_mviles_2.databinding.ActivityMainBinding
 import com.example.proyecto_2_mviles_2.model.Clima
 import com.example.proyecto_2_mviles_2.viewmodel.ClimaViewModel
+import android.view.View
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +42,32 @@ class MainActivity : AppCompatActivity() {
         vm.error.observe(this) { err ->
             err?.let { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
         }
+
+        binding.btnSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
+        binding.btnClear.setOnClickListener {
+            vm.clearAll()
+        }
+
+        binding.btnSelect.setOnClickListener {
+            adapter.isSelectionMode = true
+            adapter.notifyDataSetChanged()
+
+            binding.btnDeleteSelected.visibility = View.VISIBLE
+        }
+
+        binding.btnDeleteSelected.setOnClickListener {
+            val toDelete = adapter.selectedItems.toList()
+            vm.deleteMultiple(toDelete)
+
+            adapter.isSelectionMode = false
+            adapter.selectedItems.clear()
+            binding.btnDeleteSelected.visibility = View.GONE
+        }
+
+
 
         binding.btnBuscar.setOnClickListener {
             var city = binding.etCity.text.toString().trim()

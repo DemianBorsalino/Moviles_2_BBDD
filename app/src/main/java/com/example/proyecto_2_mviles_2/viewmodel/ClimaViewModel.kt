@@ -44,4 +44,21 @@ class ClimaViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    fun clearAll() {
+        viewModelScope.launch {
+            repo.clearAll()
+            loadSavedClimas()
+        }
+    }
+
+    fun deleteMultiple(list: List<Clima>) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repo.deleteMultiple(list)
+            }
+            loadSavedClimas()
+        }
+    }
+
 }

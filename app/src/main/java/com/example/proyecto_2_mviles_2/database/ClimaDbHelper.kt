@@ -66,4 +66,11 @@ class ClimaDbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null,
         db.close()
         return list
     }
+
+    fun clearAll() {
+        val db = writableDatabase
+        db.delete(TABLE_NAME, null, null) // tu tabla debe llamarse "clima"
+        db.close()
+    }
+
 }
