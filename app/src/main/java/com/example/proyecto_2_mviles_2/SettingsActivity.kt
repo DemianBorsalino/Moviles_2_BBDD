@@ -7,10 +7,29 @@ import androidx.preference.PreferenceFragmentCompat
 class SettingsActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(android.R.id.content, SettingsFragment())
-            .commit()
+
+        setContentView(R.layout.activity_settings)
+
+        // Configurar toolbar como ActionBar
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.settingsToolbar)
+        setSupportActionBar(toolbar)
+
+        // Activar flecha de volver
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Ajustes"
+
+        // Cargar fragment SOLO la primera vez
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.settings_container, SettingsFragment())
+                .commit()
+        }
+    }
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }
 

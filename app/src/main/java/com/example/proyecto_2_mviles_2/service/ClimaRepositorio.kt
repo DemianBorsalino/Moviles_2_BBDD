@@ -34,7 +34,7 @@ class ClimaRepositorio private constructor(private val context: Context) {
                 temperature = item.temp
             )
 
-            dbHelper.insert(clima)
+            dbHelper.insertClima(clima)
 
             Result.success(clima)
 
@@ -43,15 +43,15 @@ class ClimaRepositorio private constructor(private val context: Context) {
         }
     }
 
-    fun getSavedClimas(): List<Clima> = dbHelper.getAll()
+    fun getSavedClimas(): List<Clima> = dbHelper.getAllClimas()
 
     fun clearAll() {
-        dbHelper.clearAll()
+        dbHelper.deleteAllClimas()
     }
 
     fun deleteMultiple(list: List<Clima>) {
         val ids = list.map { it.id }
-        dbHelper.deleteMultipleById(ids)
+        dbHelper.deleteMultipleClimas(ids)
     }
 
 

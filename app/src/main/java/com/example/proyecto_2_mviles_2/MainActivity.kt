@@ -95,9 +95,9 @@ class MainActivity : AppCompatActivity() {
             vm.buscarClima(city, key, units)
         }
 
-        binding.fabRefresh.setOnClickListener { vm.loadSavedClimas() }
+        /*binding.fabRefresh.setOnClickListener { vm.loadSavedClimas() }
 
-        vm.loadSavedClimas()
+        vm.loadSavedClimas()*/ //Lo mismo que en viewmodel, No tiene sentido el boton de refresh porque lo hace solo
     }
 
     private fun openDetail(clima: Clima) {

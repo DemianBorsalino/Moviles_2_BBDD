@@ -1,64 +1,51 @@
 package com.example.proyecto_2_mviles_2.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.proyecto_2_mviles_2.model.Clima
-import com.example.proyecto_2_mviles_2.service.ClimaRepositorio
-import kotlinx.coroutines.Dispatchers
+import com.example.proyecto_2_mviles_2.repository.ClimaRepositorySingleton
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ClimaViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repo = ClimaRepositorio.getInstance(application)
+    val climas = ClimaRepositorySingleton.allClimas
 
-    private val _climas = MutableLiveData<List<Clima>>()
-    val climas: LiveData<List<Clima>> = _climas
-
-    private val _loading = MutableLiveData<Boolean>(false)
+    private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    fun loadSavedClimas() {
-        _climas.value = repo.getSavedClimas()
+    init {
+        ClimaRepositorySingleton.initialize(application)
     }
+
+    /*fun loadSavedClimas() {
+        // si queremeos hacer que los recargue, pero ya lo hace cada funcion por su lado
+    }*/
 
     fun buscarClima(city: String, apiKey: String, units: String) {
         _loading.value = true
         _error.value = null
+
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                repo.fetchClimaFromApi(city, apiKey, units)
-            }
+            val result = ClimaRepositorySingleton.fetchAndInsert(city, apiKey, units)
             _loading.value = false
-            if (result.isSuccess) {
-                // refrescar guardados
-                loadSavedClimas()
-            } else {
-                _error.value = result.exceptionOrNull()?.localizedMessage ?: "Error"
+
+            result.exceptionOrNull()?.let {
+                _error.value = it.localizedMessage
             }
         }
     }
 
-    fun clearAll() {
+    fun deleteMultiple(list: List<Clima>) =
         viewModelScope.launch {
-            repo.clearAll()
-            loadSavedClimas()
+            val ids = list.mapNotNull { it.id }
+            ClimaRepositorySingleton.deleteMultiple(ids)
         }
-    }
 
-    fun deleteMultiple(list: List<Clima>) {
+    fun clearAll() =
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                repo.deleteMultiple(list)
-            }
-            loadSavedClimas()
+            ClimaRepositorySingleton.deleteAll()
         }
-    }
-
 }
