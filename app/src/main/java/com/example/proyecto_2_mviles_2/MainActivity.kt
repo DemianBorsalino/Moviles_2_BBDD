@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "Clima"
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         lastUnits = prefs.getString("pref_units", "metric") ?: "metric"

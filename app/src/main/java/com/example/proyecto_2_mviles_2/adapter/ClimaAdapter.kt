@@ -16,6 +16,8 @@ class ClimaAdapter(
 
     var isSelectionMode = false
     val selectedItems = mutableSetOf<Clima>()
+    private var timer: Timer? = null
+    private var isTimeUpdatesRunning = false
 
     inner class VH(val binding: ItemClimaBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -24,26 +26,49 @@ class ClimaAdapter(
             binding.tvTemp.text = "${item.temperature} °C"
             binding.tvDesc.text = item.description
 
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-            binding.tvTs.text = sdf.format(Date(item.timestamp))
+            // Actualizar hora actual
+            updateCurrentTime()
 
             binding.checkSelect.visibility =
                 if (isSelectionMode) View.VISIBLE else View.GONE
 
-            binding.checkSelect.isChecked = selectedItems.any { it.id == item.id }//selectedItems.contains(item)
+            binding.checkSelect.isChecked = selectedItems.any { it.id == item.id }
 
+            // Usar listener null-safe para evitar llamadas múltiples
+            binding.checkSelect.setOnCheckedChangeListener(null)
             binding.checkSelect.setOnCheckedChangeListener { _, checked ->
-                if (checked) selectedItems.add(item)
-                else selectedItems.removeIf { it.id == item.id }
+                if (checked) {
+                    selectedItems.add(item)
+                } else {
+                    selectedItems.removeIf { it.id == item.id }
+                }
             }
 
             binding.root.setOnClickListener {
                 if (!isSelectionMode) {
                     onItemClick(item)
                 } else {
-                    binding.checkSelect.isChecked = !binding.checkSelect.isChecked
+                    val newCheckedState = !binding.checkSelect.isChecked
+                    binding.checkSelect.isChecked = newCheckedState
                 }
             }
+
+            binding.root.setOnLongClickListener {
+                if (!isSelectionMode) {
+                    isSelectionMode = true
+                    notifyDataSetChanged()
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+
+        fun updateCurrentTime() {
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            val currentTime = System.currentTimeMillis()
+            val formattedDate = sdf.format(Date(currentTime))
+            binding.tvTs.text = "$formattedDate (UTC+3)"
         }
     }
 
@@ -54,13 +79,68 @@ class ClimaAdapter(
         return VH(binding)
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) =
+    override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bind(items[position])
+    }
 
     override fun getItemCount(): Int = items.size
 
+    // Manejar actualizaciones específicas para optimizar rendimiento
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
+        if (payloads.isNotEmpty() && payloads[0] == "time_update") {
+            // Solo actualizar la hora
+            holder.updateCurrentTime()
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
+
     fun update(newItems: List<Clima>) {
         items = newItems
+        notifyDataSetChanged()
+    }
+
+    // Funciones para manejar actualizaciones de tiempo en tiempo real
+    fun startTimeUpdates() {
+        if (isTimeUpdatesRunning) return
+
+        timer = Timer()
+        timer?.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                // Notificar cambios solo en la vista de tiempo
+                notifyItemRangeChanged(0, itemCount, "time_update")
+            }
+        }, 0, 60000) // Actualizar cada minuto (60000 ms)
+
+        isTimeUpdatesRunning = true
+    }
+
+    fun stopTimeUpdates() {
+        timer?.cancel()
+        timer = null
+        isTimeUpdatesRunning = false
+    }
+
+    // Limpiar recursos cuando el adapter ya no se use
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        stopTimeUpdates()
+    }
+
+    // Funciones para manejar el modo selección
+    fun clearSelection() {
+        selectedItems.clear()
+        isSelectionMode = false
+        notifyDataSetChanged()
+    }
+
+    fun getSelectedItems(): List<Clima> {
+        return selectedItems.toList()
+    }
+
+    fun exitSelectionMode() {
+        isSelectionMode = false
+        selectedItems.clear()
         notifyDataSetChanged()
     }
 }

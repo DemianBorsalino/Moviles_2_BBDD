@@ -1,9 +1,7 @@
 package com.example.proyecto_2_mviles_2
 
-
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
 import com.example.proyecto_2_mviles_2.databinding.ActivityDetailBinding
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -30,8 +28,11 @@ class DetailActivity : AppCompatActivity() {
         binding.tvTempDetail.text = "$temp °C"
         binding.tvDescDetail.text = desc
 
+        // CORRECCIÓN: Mostrar hora actual en lugar del timestamp del clima
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        binding.tvTsDetail.text = sdf.format(Date(ts * 1000))
+        val currentTime = System.currentTimeMillis()
+        val formattedDate = sdf.format(Date(currentTime))
+        binding.tvTsDetail.text = "$formattedDate (UTC+3)"
 
         // Botón para volver
         binding.btnVolverInicio.setOnClickListener {
