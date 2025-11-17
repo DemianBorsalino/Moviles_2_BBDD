@@ -8,6 +8,9 @@ import com.example.proyecto_2_mviles_2.model.Clima
 import com.example.proyecto_2_mviles_2.service.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 object ClimaRepositorySingleton {
 
@@ -52,8 +55,21 @@ object ClimaRepositorySingleton {
             loadClimas()
             Result.success(clima)
 
+        }catch (e: retrofit2.HttpException) {
+            val msg = when (e.code()) {
+                400 -> "Solicitud incorrecta (400)."
+                401 -> "API Key incorrecta o faltante (401)."
+                404 -> "Ciudad no encontrada (404)."
+                500 -> "Error del servidor (500)."
+                else -> "Error HTTP inesperado: ${e.code()}"
+            }
+            Result.failure(Exception(msg))
+        } catch (e: UnknownHostException) {
+            Result.failure(Exception("Sin conexión a Internet"))
+        } catch (e: SocketTimeoutException) {
+            Result.failure(Exception("Tiempo de espera agotado"))
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception("Error inesperado"))
         }
     }
 
@@ -76,6 +92,7 @@ object ClimaRepositorySingleton {
             }
         }
     }
+
 
     suspend fun deleteClima(id: Int) {
         withContext(Dispatchers.IO) {

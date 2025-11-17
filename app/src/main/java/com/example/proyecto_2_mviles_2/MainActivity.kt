@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private val vm: ClimaViewModel by viewModels()
     private lateinit var adapter: ClimaAdapter
     private lateinit var prefs: SharedPreferences
+    private var lastUnits: String = "metric"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        lastUnits = prefs.getString("pref_units", "metric") ?: "metric"
 
         adapter = ClimaAdapter(listOf()) { clima -> openDetail(clima) }
         binding.recycler.layoutManager = LinearLayoutManager(this)
@@ -120,5 +122,27 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val currentUnits = prefs.getString("pref_units", "metric") ?: "metric"
+
+        if (currentUnits != lastUnits) {
+            lastUnits = currentUnits
+
+            // Obtener última ciudad buscada si existe
+            val lastCity = binding.etCity.text.toString().ifBlank {
+                prefs.getString("pref_default_city", "Buenos Aires") ?: "Buenos Aires"
+            }
+
+            val key = prefs.getString("API_KEY", null)
+
+            if (!key.isNullOrBlank()) {
+                vm.buscarClima(lastCity, key, currentUnits)
+                Toast.makeText(this, "Actualizado a ${if (currentUnits == "metric") "Celsius" else "Fahrenheit"}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
