@@ -93,6 +93,33 @@ object ClimaRepositorySingleton {
         }
     }
 
+    suspend fun convertAllTemperatures(toUnits: String) = withContext(Dispatchers.IO) {
+        val db = dbHelper ?: return@withContext
+
+        val all = db.getAllClimas()
+
+        val converted = all.map { clima ->
+            val newTemp = if (toUnits == "metric") {
+                // Fahrenheit → Celsius
+                (clima.temperature - 32.0) * 5.0 / 9.0
+            } else {
+                // Celsius → Fahrenheit
+                (clima.temperature * 9.0 / 5.0) + 32.0
+            }
+
+            clima.copy(
+                id = clima.id,
+                temperature = newTemp
+            )
+        }
+
+        db.updateMultipleClimas(converted)
+
+        withContext(Dispatchers.Main) {
+            loadClimas()
+        }
+    }
+
 
     suspend fun deleteClima(id: Int) {
         withContext(Dispatchers.IO) {

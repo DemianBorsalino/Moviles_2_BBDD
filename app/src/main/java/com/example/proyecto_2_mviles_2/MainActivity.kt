@@ -132,17 +132,13 @@ class MainActivity : AppCompatActivity() {
         if (currentUnits != lastUnits) {
             lastUnits = currentUnits
 
-            // Obtener última ciudad buscada si existe
-            val lastCity = binding.etCity.text.toString().ifBlank {
-                prefs.getString("pref_default_city", "Buenos Aires") ?: "Buenos Aires"
-            }
-
-            val key = prefs.getString("API_KEY", null)
-
-            if (!key.isNullOrBlank()) {
-                vm.buscarClima(lastCity, key, currentUnits)
-                Toast.makeText(this, "Actualizado a ${if (currentUnits == "metric") "Celsius" else "Fahrenheit"}", Toast.LENGTH_SHORT).show()
-            }
+            // Solo avisar al usuario (opcional)
+            Toast.makeText(
+                this,
+                "Mostrando en ${if (currentUnits == "metric") "Celsius" else "Fahrenheit"}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
+
 }

@@ -29,11 +29,15 @@ class ClimaViewModel(application: Application) : AndroidViewModel(application) {
         _error.value = null
 
         viewModelScope.launch {
-            val result = ClimaRepositorySingleton.fetchAndInsert(city, apiKey, units)
-            _loading.value = false
+            try {
+                val result = ClimaRepositorySingleton.fetchAndInsert(city, apiKey, units)
 
-            result.exceptionOrNull()?.let {
-                _error.value = it.localizedMessage
+                result.exceptionOrNull()?.let { ex ->
+                    _error.value = ex.localizedMessage
+                }
+
+            } finally {
+                _loading.value = false
             }
         }
     }
@@ -47,5 +51,10 @@ class ClimaViewModel(application: Application) : AndroidViewModel(application) {
     fun clearAll() =
         viewModelScope.launch {
             ClimaRepositorySingleton.deleteAll()
+        }
+
+    fun convertirTemperaturas(units: String) =
+        viewModelScope.launch {
+            ClimaRepositorySingleton.convertAllTemperatures(units)
         }
 }

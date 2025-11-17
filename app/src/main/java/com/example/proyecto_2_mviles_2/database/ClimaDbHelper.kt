@@ -71,6 +71,38 @@ class ClimaDbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null,
         return list
     }
 
+    fun updateClima(clima: Clima) {
+        val db = writableDatabase
+        val cv = ContentValues().apply {
+            put(COL_CITY, clima.cityName)
+            put(COL_DESC, clima.description)
+            put(COL_TEMP, clima.temperature)
+            put(COL_TS, clima.timestamp)
+        }
+        db.update(TABLE_NAME, cv, "$COL_ID = ?", arrayOf(clima.id.toString()))
+        db.close()
+    }
+
+    fun updateMultipleClimas(climas: List<Clima>) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            climas.forEach { clima ->
+                val cv = ContentValues().apply {
+                    put(COL_CITY, clima.cityName)
+                    put(COL_DESC, clima.description)
+                    put(COL_TEMP, clima.temperature)
+                    put(COL_TS, clima.timestamp)
+                }
+                db.update(TABLE_NAME, cv, "$COL_ID = ?", arrayOf(clima.id.toString()))
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }
+
     fun deleteClima(id: Int) {
         val db = writableDatabase
         db.delete(TABLE_NAME, "$COL_ID = ?", arrayOf(id.toString()))
