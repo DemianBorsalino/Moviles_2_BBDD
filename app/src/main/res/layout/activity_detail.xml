@@ -37,7 +37,6 @@
             android:padding="24dp"
             android:background="@color/card_bg">
 
-            <!-- Ciudad -->
             <TextView
                 android:id="@+id/tvCityDetail"
                 android:layout_width="0dp"
@@ -52,7 +51,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- Temperatura -->
             <TextView
                 android:id="@+id/tvTempDetail"
                 android:layout_width="wrap_content"
@@ -66,7 +64,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- Descripción -->
             <TextView
                 android:id="@+id/tvDescDetail"
                 android:layout_width="0dp"
@@ -80,7 +77,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- Línea divisoria -->
             <View
                 android:id="@+id/divider"
                 android:layout_width="0dp"
@@ -91,7 +87,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- Timestamp -->
             <TextView
                 android:id="@+id/tvTsDetail"
                 android:layout_width="0dp"
@@ -107,7 +102,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- BOTÓN VOLVER -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnVolverInicio"
         android:layout_width="0dp"
