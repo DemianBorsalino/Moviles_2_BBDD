@@ -11,6 +11,7 @@ import java.util.*
 
 class ClimaAdapter(
     private var items: List<Clima>,
+    private var units: String,
     private val onItemClick: (Clima) -> Unit
 ) : RecyclerView.Adapter<ClimaAdapter.VH>() {
 
@@ -23,7 +24,7 @@ class ClimaAdapter(
 
         fun bind(item: Clima) {
             binding.tvCity.text = item.cityName
-            binding.tvTemp.text = "${item.temperature} °C"
+            binding.tvTemp.text = "${item.temperature} ${getUnitSymbol()}"
             binding.tvDesc.text = item.description
 
             // Actualizar hora actual
@@ -121,13 +122,13 @@ class ClimaAdapter(
         isTimeUpdatesRunning = false
     }
 
-    // Limpiar recursos cuando el adapter ya no se use
+
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         stopTimeUpdates()
     }
 
-    // Funciones para manejar el modo selección
+
     fun clearSelection() {
         selectedItems.clear()
         isSelectionMode = false
@@ -143,4 +144,14 @@ class ClimaAdapter(
         selectedItems.clear()
         notifyDataSetChanged()
     }
+
+    private fun getUnitSymbol(): String {
+        return if (units == "imperial") "°F" else "°C"
+    }
+
+    fun updateUnits(newUnits: String) {
+        units = newUnits
+        notifyDataSetChanged()
+    }
+
 }
