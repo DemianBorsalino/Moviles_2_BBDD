@@ -35,7 +35,10 @@ class MainActivity : AppCompatActivity() {
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         lastUnits = prefs.getString("pref_units", "metric") ?: "metric"
 
-        adapter = ClimaAdapter(listOf()) { clima -> openDetail(clima) }
+        adapter = ClimaAdapter(
+            listOf(),
+            lastUnits
+        ) { clima -> openDetail(clima) }
         binding.recycler.layoutManager = LinearLayoutManager(this)
         binding.recycler.adapter = adapter
 
@@ -49,27 +52,27 @@ class MainActivity : AppCompatActivity() {
             err?.let { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
         }
 
-        /*binding.btnSettings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }*/
-
         binding.btnClear.setOnClickListener {
             vm.clearAll()
         }
 
         binding.btnSelect.setOnClickListener {
-            adapter.isSelectionMode = true
-            adapter.notifyDataSetChanged()
+            if (!adapter.isSelectionMode) {
+                adapter.isSelectionMode = true
+                adapter.notifyDataSetChanged()
+                binding.btnDeleteSelected.visibility = View.VISIBLE
 
-            binding.btnDeleteSelected.visibility = View.VISIBLE
+            } else {
+                adapter.exitSelectionMode()
+                binding.btnDeleteSelected.visibility = View.GONE
+            }
         }
 
         binding.btnDeleteSelected.setOnClickListener {
-            val toDelete = adapter.selectedItems.toList()
+            val toDelete = adapter.getSelectedItems()
             vm.deleteMultiple(toDelete)
 
-            adapter.isSelectionMode = false
-            adapter.selectedItems.clear()
+            adapter.exitSelectionMode()
             binding.btnDeleteSelected.visibility = View.GONE
         }
 
@@ -133,7 +136,8 @@ class MainActivity : AppCompatActivity() {
         if (currentUnits != lastUnits) {
             lastUnits = currentUnits
 
-            // Solo avisar al usuario (opcional)
+            adapter.updateUnits(currentUnits)
+
             Toast.makeText(
                 this,
                 "Mostrando en ${if (currentUnits == "metric") "Celsius" else "Fahrenheit"}",
