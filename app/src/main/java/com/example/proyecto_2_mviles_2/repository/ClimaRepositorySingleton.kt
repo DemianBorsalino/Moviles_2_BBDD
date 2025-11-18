@@ -19,10 +19,6 @@ object ClimaRepositorySingleton {
     private val _allClimas = MutableLiveData<List<Clima>>()
     val allClimas: LiveData<List<Clima>> = _allClimas
 
-
-    // --------------------------------------
-    //   Inicializar el repositorio
-    // --------------------------------------
     fun initialize(context: Context) {
         if (dbHelper == null) {
             dbHelper = ClimaDbHelper(context)
@@ -73,17 +69,10 @@ object ClimaRepositorySingleton {
         }
     }
 
-    // --------------------------------------
-    //   Cargar datos desde SQLite
-    // --------------------------------------
     private fun loadClimas() {
         _allClimas.value = requireDbHelper().getAllClimas()
     }
 
-
-    // --------------------------------------
-    //   CRUD
-    // --------------------------------------
     suspend fun insertClima(clima: Clima) {
         withContext(Dispatchers.IO) {
             requireDbHelper().insertClima(clima)

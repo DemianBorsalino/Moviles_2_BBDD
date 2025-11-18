@@ -13,15 +13,12 @@ class SettingsActivity: AppCompatActivity() {
 
         setContentView(R.layout.activity_settings)
 
-        // Configurar toolbar como ActionBar
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.settingsToolbar)
         setSupportActionBar(toolbar)
 
-        // Activar flecha de volver
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Ajustes"
 
-        // Cargar fragment SOLO la primera vez
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.settings_container, SettingsFragment())
@@ -43,20 +40,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        // Obtener ViewModel asociado a la Activity
         viewModel = ViewModelProvider(requireActivity())[ClimaViewModel::class.java]
 
-        // Buscar la preferencia que define las unidades
         val unidadPref = findPreference<ListPreference>("pref_units")
 
         unidadPref?.setOnPreferenceChangeListener { _, newValue ->
 
-            val units = newValue.toString()  // "metric" o "imperial"
+            val units = newValue.toString()
 
-            // Llamar conversión
             viewModel.convertirTemperaturas(units)
 
-            true // aceptar el cambio
+            true
         }
     }
 }

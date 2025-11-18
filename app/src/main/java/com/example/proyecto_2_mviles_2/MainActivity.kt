@@ -88,10 +88,7 @@ class MainActivity : AppCompatActivity() {
 
             val key = prefs.getString("API_KEY", null)
             val units = prefs.getString("pref_units", "metric") ?: "metric"
-            /*if (city.isBlank()) {
-                Toast.makeText(this, "Ingresa ciudad", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }*/
+
             if (key.isNullOrBlank()) {
                 Toast.makeText(this, "Configura API Key en Ajustes", Toast.LENGTH_LONG).show()
                 startActivity(Intent(this, SettingsActivity::class.java))
@@ -101,9 +98,6 @@ class MainActivity : AppCompatActivity() {
             vm.buscarClima(city, key, units)
         }
 
-        /*binding.fabRefresh.setOnClickListener { vm.loadSavedClimas() }
-
-        vm.loadSavedClimas()*/ //Lo mismo que en viewmodel, No tiene sentido el boton de refresh porque lo hace solo
     }
 
     private fun openDetail(clima: Clima) {

@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- City -->
         <TextView
             android:id="@+id/tvCity"
             android:layout_width="0dp"
@@ -29,7 +28,7 @@
             app:layout_constraintEnd_toStartOf="@id/checkSelect"
             android:layout_marginEnd="8dp"/>
 
-        <!-- CheckBox -->
+
         <CheckBox
             android:id="@+id/checkSelect"
             android:layout_width="wrap_content"
@@ -40,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Temperature -->
+
         <TextView
             android:id="@+id/tvTemp"
             android:layout_width="wrap_content"
@@ -52,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@id/tvCity"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <!-- Description -->
+
         <TextView
             android:id="@+id/tvDesc"
             android:layout_width="wrap_content"
@@ -64,7 +63,6 @@
             app:layout_constraintTop_toBottomOf="@id/tvTemp"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <!-- Timestamp -->
         <TextView
             android:id="@+id/tvTs"
             android:layout_width="wrap_content"

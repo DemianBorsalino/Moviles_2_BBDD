@@ -20,9 +20,6 @@ class ClimaViewModel(application: Application) : AndroidViewModel(application) {
         ClimaRepositorySingleton.initialize(application)
     }
 
-    /*fun loadSavedClimas() {
-        // si queremeos hacer que los recargue, pero ya lo hace cada funcion por su lado
-    }*/
 
     fun buscarClima(city: String, apiKey: String, units: String) {
         _loading.value = true

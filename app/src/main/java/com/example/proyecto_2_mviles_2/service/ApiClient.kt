@@ -15,7 +15,6 @@ data class WeatherDesc(val description: String?)
 data class WeatherbitResponse(val data: List<WeatherbitResponseItem>)
 
 interface ApiClient {
-    // ejemplo: https://api.weatherbit.io/v2.0/current?city=London&key=API_KEY
     @GET("v2.0/current")
     suspend fun getCurrentByCity(
         @Query("city") city: String,

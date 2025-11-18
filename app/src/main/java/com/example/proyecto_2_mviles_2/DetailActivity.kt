@@ -17,24 +17,24 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Obtener datos del intent
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
+        val units = prefs.getString("pref_units", "metric") ?: "metric"
+        val unitSymbol = if (units == "imperial") "°F" else "°C"
+
         val city = intent.getStringExtra("city")
         val temp = intent.getDoubleExtra("temp", 0.0)
         val desc = intent.getStringExtra("desc")
         val ts = intent.getLongExtra("ts", 0L)
 
-        // Setear la información
         binding.tvCityDetail.text = city
-        binding.tvTempDetail.text = "$temp °C"
+        binding.tvTempDetail.text = "$temp $unitSymbol"
         binding.tvDescDetail.text = desc
 
-        // CORRECCIÓN: Mostrar hora actual en lugar del timestamp del clima
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
         val currentTime = System.currentTimeMillis()
         val formattedDate = sdf.format(Date(currentTime))
         binding.tvTsDetail.text = "$formattedDate (UTC+3)"
 
-        // Botón para volver
         binding.btnVolverInicio.setOnClickListener {
             finish()
         }

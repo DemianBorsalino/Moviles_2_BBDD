@@ -27,7 +27,6 @@ class ClimaAdapter(
             binding.tvTemp.text = "${item.temperature} ${getUnitSymbol()}"
             binding.tvDesc.text = item.description
 
-            // Actualizar hora actual
             updateCurrentTime()
 
             binding.checkSelect.visibility =
@@ -35,7 +34,6 @@ class ClimaAdapter(
 
             binding.checkSelect.isChecked = selectedItems.any { it.id == item.id }
 
-            // Usar listener null-safe para evitar llamadas múltiples
             binding.checkSelect.setOnCheckedChangeListener(null)
             binding.checkSelect.setOnCheckedChangeListener { _, checked ->
                 if (checked) {
@@ -86,10 +84,8 @@ class ClimaAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    // Manejar actualizaciones específicas para optimizar rendimiento
     override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
         if (payloads.isNotEmpty() && payloads[0] == "time_update") {
-            // Solo actualizar la hora
             holder.updateCurrentTime()
         } else {
             super.onBindViewHolder(holder, position, payloads)
@@ -101,7 +97,6 @@ class ClimaAdapter(
         notifyDataSetChanged()
     }
 
-    // Funciones para manejar actualizaciones de tiempo en tiempo real
     fun startTimeUpdates() {
         if (isTimeUpdatesRunning) return
 
